@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.json());
+
 let persons = [
   {
     name: "Arto Hellas",
@@ -29,7 +33,7 @@ let persons = [
   }
 ];
 
-// #GET
+// # GET
 
 app.get("/api/persons", (request, response) => {
   response.json(persons);
@@ -47,6 +51,7 @@ app.get("/info", (request, response) => {
 app.get("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
   const person = persons.find(person => person.id === id);
+
   if (person) {
     response.json(person);
   } else {
@@ -54,7 +59,17 @@ app.get("/api/persons/:id", (request, response) => {
   }
 });
 
-// #PORT
+// # DELETE
+
+app.delete("/api/persons/:id", (request, response) => {
+  const id = Number(request.params.id);
+  persons = persons.filter(person => person.id !== id);
+
+  response.status(204).end();
+});
+
+// # PORT
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
